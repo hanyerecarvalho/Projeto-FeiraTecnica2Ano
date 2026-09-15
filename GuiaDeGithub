@@ -1,0 +1,402 @@
+# Guia de Git e GitHub — Projeto Feira Técnica 2 Ano
+
+Este guia explica como baixar o projeto, criar pastas e arquivos, fazer alterações e enviar tudo para o GitHub.
+
+## 1. Pré-requisitos
+
+Instale:
+
+* Git
+* Visual Studio Code
+
+Depois, verifique se o Git está instalado:
+
+```bash
+git --version
+```
+
+---
+
+## 2. Baixar o projeto
+
+Abra o terminal e execute:
+
+```bash
+git clone https://github.com/hanyerecarvalho/Projeto-FeiraTecnica2Ano.git
+```
+
+Entre na pasta:
+
+```bash
+cd Projeto-FeiraTecnica
+```
+
+Depois abra no VS Code:
+
+```bash
+code .
+```
+
+---
+
+## 3. Antes de começar a trabalhar
+
+Sempre atualize seu projeto antes de fazer alterações:
+
+```bash
+git pull origin main
+```
+
+Isso baixa as alterações que outras pessoas enviaram para o GitHub.
+
+---
+
+## 4. Criar uma pasta
+
+No VS Code, clique com o botão direito na pasta do projeto e selecione:
+
+**New Folder**
+
+Exemplo:
+
+```text
+frontend/
+├── css/
+├── js/
+└── pages/
+```
+
+Ou pelo terminal:
+
+```bash
+mkdir frontend
+```
+
+Para criar várias pastas:
+
+```bash
+mkdir css js pages
+```
+
+---
+
+## 5. Criar um arquivo
+
+No VS Code:
+
+**Botão direito → New File**
+
+Exemplo:
+
+```text
+index.html
+style.css
+script.js
+```
+
+Ou pelo terminal:
+
+```bash
+touch index.html
+```
+
+No Windows, também é possível criar o arquivo diretamente pelo VS Code.
+
+---
+
+## 6. Estrutura do projeto
+
+A estrutura principal será:
+
+```text
+Projeto-FeiraTecnica/
+│
+├── frontend/
+│   ├── pages/
+│   ├── css/
+│   ├── js/
+│   └── assets/
+│
+├── backend/
+│   ├── config/
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   ├── models/
+│   └── middlewares/
+│
+├── database/
+│   └── database.sql
+│
+├── README.md
+└── .gitignore
+```
+
+---
+
+## 7. Fazer alterações
+
+Depois de criar ou modificar arquivos, verifique o que foi alterado:
+
+```bash
+git status
+```
+
+Exemplo:
+
+```text
+modified: frontend/index.html
+new file: frontend/js/login.js
+```
+
+---
+
+## 8. Adicionar os arquivos ao Git
+
+Para adicionar todas as alterações:
+
+```bash
+git add .
+```
+
+Depois confira:
+
+```bash
+git status
+```
+
+Os arquivos deverão aparecer como prontos para commit.
+
+---
+
+## 9. Criar um commit
+
+Faça um commit descrevendo o que você fez:
+
+```bash
+git commit -m "feat: adiciona pagina de login"
+```
+
+Exemplos:
+
+```bash
+git commit -m "feat: adiciona sistema de cadastro"
+```
+
+```bash
+git commit -m "feat: cria tela inicial"
+```
+
+```bash
+git commit -m "fix: corrige formulario de login"
+```
+
+```bash
+git commit -m "style: melhora layout do dashboard"
+```
+
+---
+
+## 10. Enviar para o GitHub
+
+Depois do commit:
+
+```bash
+git push origin main
+```
+
+Agora as alterações estarão no GitHub.
+
+---
+
+# Fluxo padrão
+
+Sempre que for trabalhar no projeto:
+
+```bash
+git pull origin main
+```
+
+Faça suas alterações.
+
+Depois:
+
+```bash
+git add .
+```
+
+```bash
+git commit -m "descricao da alteracao"
+```
+
+```bash
+git push origin main
+```
+
+O fluxo completo é:
+
+```text
+GitHub
+   ↓
+git pull
+   ↓
+Você trabalha
+   ↓
+git add .
+   ↓
+git commit
+   ↓
+git push
+   ↓
+GitHub
+```
+
+---
+
+# 11. ATENÇÃO: não sobrescreva o trabalho dos outros
+
+Antes de começar:
+
+```bash
+git pull origin main
+```
+
+Depois de terminar:
+
+```bash
+git add .
+git commit -m "descricao"
+git push origin main
+```
+
+Evite fazer:
+
+```bash
+git push --force
+```
+
+O `--force` pode sobrescrever alterações que já foram enviadas por outras pessoas.
+
+---
+
+# 12. Se aparecer conflito
+
+Se o Git informar:
+
+```text
+CONFLICT
+```
+
+não faça `git push --force`.
+
+Primeiro execute:
+
+```bash
+git status
+```
+
+O Git mostrará quais arquivos possuem conflito.
+
+Não apague ou altere o arquivo sem entender qual versão deve permanecer. Peça ajuda à pessoa responsável pelo projeto antes de resolver o conflito.
+
+---
+
+# 13. Não envie arquivos privados
+
+Nunca coloque senhas, tokens ou informações privadas no GitHub.
+
+Não envie:
+
+```text
+.env
+.env.local
+```
+
+O projeto já possui um `.gitignore` para impedir isso.
+
+Exemplo de informação que não deve ser publicada:
+
+```text
+DB_PASSWORD=minha_senha
+JWT_SECRET=minha_chave_secreta
+```
+
+---
+
+# 14. Não altere a estrutura sem combinar
+
+Antes de criar novas pastas principais, verifique a estrutura atual do projeto.
+
+Por exemplo, não crie:
+
+```text
+backend2/
+backend-final/
+backend-novo/
+```
+
+se já existe:
+
+```text
+backend/
+```
+
+Coloque os arquivos na pasta correta.
+
+---
+
+# 15. Resumo dos comandos
+
+### Baixar o projeto
+
+```bash
+git clone https://github.com/hanyerecarvalho/Projeto-FeiraTecnica.git
+```
+
+### Atualizar
+
+```bash
+git pull origin main
+```
+
+### Ver alterações
+
+```bash
+git status
+```
+
+### Adicionar alterações
+
+```bash
+git add .
+```
+
+### Criar commit
+
+```bash
+git commit -m "descricao"
+```
+
+### Enviar para o GitHub
+
+```bash
+git push origin main
+```
+
+## Regra principal
+
+**Antes de trabalhar:**
+
+```bash
+git pull origin main
+```
+
+**Depois de trabalhar:**
+
+```bash
+git add .
+git commit -m "descricao"
+git push origin main
+```
+
+Não use `git push --force` sem autorização do responsável pelo repositório.
