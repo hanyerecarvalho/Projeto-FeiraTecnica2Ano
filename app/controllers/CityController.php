@@ -36,6 +36,20 @@ class CityController
         return $this->jsonResponse($response, $cidade, 200);
     }
 
+    public function buscarSugestoes(Request $request, Response $response, array $args): Response
+    {
+        $nome = $args['nome'] ?? '';
+
+        try {
+            $sugestoes = $this->cidadeService->buscarSugestoes($nome);
+        } catch (\Throwable $e) {
+            error_log("🔴 CityController::buscarSugestoes - " . $e->getMessage());
+            return $this->jsonResponse($response, ['erro' => 'Erro interno ao buscar sugestões.'], 500);
+        }
+
+        return $this->jsonResponse($response, $sugestoes, 200);
+    }
+
     private function jsonResponse(Response $response, $dados, int $status): Response
     {
         $response->getBody()->write(json_encode($dados, JSON_UNESCAPED_UNICODE));

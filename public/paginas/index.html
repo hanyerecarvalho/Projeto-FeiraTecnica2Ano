@@ -12,16 +12,16 @@
 </head>
 <body class="">
     <div class="div-main">
-
         <div class="barra">
             <div class="Titulos">
                 <span class="emoji">🌍</span>
-                <span class="titulo">Planetário 3D</span>
+                <span class="titulo">Planetary View 3D</span>
             </div>
 
-            <div class="pesquisar">
-                <span class="pesquisaIcone">🔍</span>
-                <input id="inputPesquisa" type="text" placeholder="Pesquisar cidade...">
+          <div class="pesquisar">
+                <span class="pesquisaIcone"></span>
+                <input id="inputPesquisa" type="text" placeholder="Pesquisar cidade..." autocomplete="off">
+                 <ul id="sugestoes" class="sugestoes" role="listbox"></ul>
             </div>
 
             <div class="grupo-horarios">
@@ -43,11 +43,27 @@
 
         <div id="cena3d-container"></div>
 
+        <section id="informacoesCidade" class="informacoes-cidade" hidden aria-live="polite">
+            <div class="informacoes-cidade-cabecalho">
+                <div>
+                    <span class="informacoes-cidade-pais" id="cidadePais"></span>
+                    <h2 id="cidadeNome"></h2>
+                </div>
+                <button id="fecharInformacoes" type="button" aria-label="Fechar informações">×</button>
+            </div>
+            <div class="informacoes-cidade-dados">
+                <p><strong>Localização:</strong> <span id="cidadeCoordenadas"></span></p>
+                <p><strong>Clima:</strong> <span id="cidadeClima">Consultando...</span></p>
+            </div>
+            <p id="mensagemCidade" class="mensagem-cidade"></p>
+        </section>
+
     </div>
 
     <script src="../js/tema.js"></script>
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/horarios.js"></script>
+    <script type="module" src="../js/ui.js"></script>
 
 </body>
 </html>
