@@ -8,6 +8,7 @@ return function ($app, CityController $cityController, ClimateController $climat
     $app->get('/api/cidades/sugestoes/{nome}', [$cityController, 'buscarSugestoes']);
     $app->get('/api/cidade/{nome}', [$cityController, 'buscarPorNome']);
     $app->get('/api/clima/{cidade}', [$climateController, 'buscarClima']);
+    
 
     $app->get('/', function ($request, $response) {
         $html = file_get_contents(__DIR__ . '/../../public/paginas/index.html');

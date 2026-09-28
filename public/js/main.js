@@ -3,9 +3,71 @@ import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/js
 import * as Planeta from './planet.js';
 import { posicoes } from './posicao.js';
 
+import { carregarCidade } from "./ui.js";
+import { capitais } from "./capitais.js";
+import { criarMarcador } from "./marcadores.js";
+
 let cena, camera, renderizador, controles;
 
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+const marcadoresClicaveis = [];
+
+
 let terra, nuvens, lua, sol, mercurio, venus, saturno, anelSaturno, marte, urano, jupiter, netuno;
+
+
+function configurarCliqueNosMarcadores() {
+    renderizador.domElement.addEventListener('click', (event) => {
+        const retangulo = renderizador.domElement.getBoundingClientRect();
+
+        mouse.x =
+            ((event.clientX - retangulo.left) / retangulo.width) * 2 - 1;
+
+        mouse.y =
+            -((event.clientY - retangulo.top) / retangulo.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        const intersecoes = raycaster.intersectObjects(
+            marcadoresClicaveis,
+            true
+        );
+
+        if (intersecoes.length === 0) {
+            return;
+        }
+
+        let marcador = intersecoes[0].object;
+        while (marcador && !marcador.userData.nome) {
+            marcador = marcador.parent;
+        }
+
+        if (!marcador) {
+            return;
+        }
+
+        const posicaoMarcador = new THREE.Vector3();
+            marcador.getWorldPosition(posicaoMarcador);
+
+        const direcaoAteCamera = new THREE.Vector3()
+            .subVectors(camera.position, posicaoMarcador)
+            .normalize();
+
+        const normalDoMarcador = posicaoMarcador.clone().normalize();
+
+        const visivel =
+            normalDoMarcador.dot(direcaoAteCamera) > 0;
+
+        if (!visivel) {
+            return;
+        }
+
+        carregarCidade(marcador.userData.nome);
+    });
+}
+
 
 function init() {
     const container = document.getElementById('cena3d-container');
@@ -30,6 +92,15 @@ function init() {
 
     terra = Planeta.criarTerra();
     cena.add(terra);
+
+    capitais.forEach((cidade) => {
+
+        const marcador = criarMarcador(cidade);
+
+        terra.add(marcador);
+
+        marcadoresClicaveis.push(marcador);
+    });
 
     nuvens = Planeta.criarNuvens();
     cena.add(nuvens);
@@ -89,6 +160,7 @@ function init() {
 
     netuno = Planeta.criarNetuno({
     posicao: posicoes.netuno
+
 });
 
 cena.add(netuno);
@@ -132,6 +204,8 @@ cena.add(netuno);
     controles.dampingFactor = 0.05;
     controles.minDistance = 6;
     controles.maxDistance = 200;
+
+    configurarCliqueNosMarcadores();
 }
 
 function animar() {

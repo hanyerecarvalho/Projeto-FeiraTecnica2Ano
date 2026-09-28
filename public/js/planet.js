@@ -4,7 +4,7 @@ export function criarTerra() {
     const geometria = new THREE.SphereGeometry(4, 64, 64);
 
     const carregador = new THREE.TextureLoader();
-    const mapaCor = carregador.load('../assets/2k_earth_daymap_feira.png');
+    const mapaCor   = carregador.load('../assets/2k_earth_daymap.png');
     const mapaNoite = carregador.load('../assets/2k_earth_nightmap.png');
 
     const material = new THREE.MeshStandardMaterial({
@@ -70,7 +70,7 @@ export function criarLua({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
     const geometria = new THREE.SphereGeometry(1, 32, 32);
 
     const carregador = new THREE.TextureLoader();
-    const textura = carregador.load('../assets/8k_moon.png');
+    const textura = carregador.load('../assets/2k_moon.png');
 
     const material = new THREE.MeshBasicMaterial({
         map: textura
@@ -90,10 +90,10 @@ export function criarLua({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 //-----------------------------------------------------------------------------//
 
 export function criarSol({ posicao = { x: 10, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.SphereGeometry(20, 100, 100);
+    const geometria = new THREE.SphereGeometry(15, 100, 100);
 
     const carregador = new THREE.TextureLoader();
-    const mapaCor = carregador.load('../assets/8k_sun.png');
+    const mapaCor = carregador.load('../assets/2k_sun.png');
 
     const material = new THREE.MeshBasicMaterial({
         map: mapaCor,
@@ -115,7 +115,8 @@ export function criarBrilhoSol({ posicao = { x: 10, y: 0, z: 0 } } = {}) {
 
     const brilho = new THREE.Group();
 
-    const geometria1 = new THREE.SphereGeometry(21, 64, 64);
+    // Brilho mais próximo do Sol
+    const geometria1 = new THREE.SphereGeometry(16, 64, 64);
 
     const material1 = new THREE.MeshBasicMaterial({
         color: 0xffaa33,
@@ -128,7 +129,8 @@ export function criarBrilhoSol({ posicao = { x: 10, y: 0, z: 0 } } = {}) {
 
     const camada1 = new THREE.Mesh(geometria1, material1);
 
-    const geometria2 = new THREE.SphereGeometry(23, 64, 64);
+    // Brilho intermediário
+    const geometria2 = new THREE.SphereGeometry(17, 64, 64);
 
     const material2 = new THREE.MeshBasicMaterial({
         color: 0xff7700,
@@ -141,7 +143,8 @@ export function criarBrilhoSol({ posicao = { x: 10, y: 0, z: 0 } } = {}) {
 
     const camada2 = new THREE.Mesh(geometria2, material2);
 
-    const geometria3 = new THREE.SphereGeometry(26, 64, 64);
+    // Brilho externo
+    const geometria3 = new THREE.SphereGeometry(18, 64, 64);
 
     const material3 = new THREE.MeshBasicMaterial({
         color: 0xff4400,
@@ -170,10 +173,10 @@ export function criarBrilhoSol({ posicao = { x: 10, y: 0, z: 0 } } = {}) {
 //-----------------------------------------------------------------------------//
 
 export function criarMercurio({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.SphereGeometry(1.5, 32, 32);
+const geometria = new THREE.SphereGeometry(1.5, 32, 32);
 
     const carregador = new THREE.TextureLoader();
-    const textura = carregador.load('../assets/8k_mercury.png');
+    const textura = carregador.load('../assets/2k_mercury.png');
 
     const material = new THREE.MeshStandardMaterial({
         map: textura,
@@ -194,10 +197,9 @@ export function criarMercurio({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 //-----------------------------------------------------------------------------//
 
 export function criarVenus({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.SphereGeometry(3.8, 64, 64);
-
+const geometria = new THREE.SphereGeometry(3.8, 64, 64);
     const carregador = new THREE.TextureLoader();
-    const textura = carregador.load('../assets/8k_venus_surface.png');
+    const textura = carregador.load('../assets/2k_venus_surface.png');
 
     const material = new THREE.MeshStandardMaterial({
         map: textura,
@@ -218,10 +220,10 @@ export function criarVenus({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 //--------------------------------------------------//
 
 export function criarSaturno({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.SphereGeometry(7, 64, 64);
+const geometria = new THREE.SphereGeometry(7, 64, 64);
 
     const carregador = new THREE.TextureLoader();
-    const textura = carregador.load('../assets/8k_saturn.png');
+    const textura = carregador.load('../assets/2k_saturn.png');
 
     const material = new THREE.MeshStandardMaterial({
         map: textura,
@@ -235,18 +237,33 @@ export function criarSaturno({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
         posicao.y,
         posicao.z
     );
-
+    
     return saturno;
 }
 
-//--------------------------------------------------//
+
 
 export function criarAnelSaturno({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.RingGeometry(8, 13, 128);
+    const raioInterno = 4;
+    const raioExterno = 12;
+
+    const geometria = new THREE.RingGeometry(raioInterno, raioExterno, 64);
+
+    // Corrige o UV mapping para ser radial (do centro pra borda), 
+    // em vez do mapeamento padrão linear/quadrado do RingGeometry
+    const posicoesVertices = geometria.attributes.position;
+    const uv = geometria.attributes.uv;
+    const vertice = new THREE.Vector3();
+
+    for (let i = 0; i < posicoesVertices.count; i++) {
+        vertice.fromBufferAttribute(posicoesVertices, i);
+        const distanciaDoCentro = vertice.length();
+        const uvX = (distanciaDoCentro - raioInterno) / (raioExterno - raioInterno);
+        uv.setXY(i, uvX, 1);
+    }
 
     const carregador = new THREE.TextureLoader();
-
-    const transparencia = carregador.load('../assets/8k_saturn_ring_alpha.png');
+    const transparencia = carregador.load('../assets/2k_saturn_ring_alpha.png');
 
     const material = new THREE.MeshStandardMaterial({
         alphaMap: transparencia,
@@ -257,13 +274,8 @@ export function criarAnelSaturno({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 
     const aneis = new THREE.Mesh(geometria, material);
 
-    aneis.position.set(
-        posicao.x,
-        posicao.y,
-        posicao.z
-    );
-
-    aneis.rotation.x = 1.5;
+    aneis.position.set(posicao.x, posicao.y, posicao.z);
+    aneis.rotation.x = Math.PI / 2;
 
     return aneis;
 }
@@ -271,8 +283,7 @@ export function criarAnelSaturno({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 //--------------------------------------------------//
 
 export function criarUrano({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.SphereGeometry(5, 120, 120);
-
+    const geometria = new THREE.SphereGeometry(9, 120, 120);
     const carregador = new THREE.TextureLoader();
     const textura = carregador.load('../assets/2k_uranus.png');
 
@@ -295,10 +306,9 @@ export function criarUrano({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 //--------------------------------------------------//
 
 export function criarMarte({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
-    const geometria = new THREE.SphereGeometry(2.1, 64, 64);
-
+    const geometria = new THREE.SphereGeometry(3, 64, 64);
     const carregador = new THREE.TextureLoader();
-    const textura = carregador.load('../assets/8k_mars.png');
+    const textura   = carregador.load('../assets/2k_mars.png');
 
     const material = new THREE.MeshStandardMaterial({
         map: textura,
@@ -306,7 +316,6 @@ export function criarMarte({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
     });
 
     const marte = new THREE.Mesh(geometria, material);
-
     marte.position.set(
         posicao.x,
         posicao.y,
@@ -320,12 +329,12 @@ export function criarMarte({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 
 export function criarJupiter({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 
-    const geometria = new THREE.SphereGeometry(8, 64, 64);
+    const geometria = new THREE.SphereGeometry(5, 64, 64);
 
     const carregador = new THREE.TextureLoader();
 
     const textura = carregador.load(
-        '../assets/8k_jupiter.png'
+        '../assets/2k_jupiter.png'
     );
 
     const material = new THREE.MeshStandardMaterial({
@@ -351,7 +360,7 @@ export function criarJupiter({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 
 export function criarNetuno({ posicao = { x: 0, y: 0, z: 0 } } = {}) {
 
-    const geometria = new THREE.SphereGeometry(5, 115, 115);
+    const geometria = new THREE.SphereGeometry(8, 115, 115);
 
     const carregador = new THREE.TextureLoader();
 

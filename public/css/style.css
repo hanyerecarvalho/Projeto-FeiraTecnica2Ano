@@ -4,6 +4,31 @@
   --aurora: #2dd4bf;  /* verde-água */
   --muted: #7d8ca8;
 }
+:root[data-theme="dark"] {
+    --cor-fundo: #121212;
+    --cor-texto: #f5f5f5;
+    --cor-painel: #1e1e1e;
+    --cor-placeholder: rgba(255, 255, 255, 0.4);
+    --cor-vidro: rgba(255, 255, 255, 0.07);
+    --cor-vidro-forte: rgba(255, 255, 255, 0.1);
+    --cor-vidro-borda: rgba(255, 255, 255, 0.14);
+    --cor-vidro-hover: rgba(255, 255, 255, 0.16);
+    --cor-divisor: rgba(255, 255, 255, 0.1);
+    --sombra-painel: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme="light"] {
+    --cor-fundo: #f5f5f5;
+    --cor-texto: #121212;
+    --cor-painel: #ffffff;
+    --cor-placeholder: rgba(0, 0, 0, 0.4);
+    --cor-vidro: rgba(255, 255, 255, 0.55);
+    --cor-vidro-forte: rgba(255, 255, 255, 0.75);
+    --cor-vidro-borda: rgba(0, 0, 0, 0.1);
+    --cor-vidro-hover: rgba(0, 0, 0, 0.06);
+    --cor-divisor: rgba(0, 0, 0, 0.08);
+    --sombra-painel: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
 
 /* Permite animar o ângulo do brilho da busca */
 @property --angulo {
@@ -62,6 +87,7 @@
 @keyframes led-correndo {
   to { background-position: -200% 0; }
 }
+
 /* ===== 3. Busca: uma caixa só, com brilho giratório no foco ===== */
 .pesquisar {
   display: flex;
@@ -77,6 +103,7 @@
     linear-gradient(#0b1220, #0b1220) padding-box,
     linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)) border-box;
   transition: box-shadow 300ms ease;
+  position: relative;
 }
 
 .pesquisar:focus-within {
@@ -167,6 +194,7 @@
   flex-shrink: 0;
   background: rgba(120, 200, 255, 0.12);
 }
+
 /* ===== 5. Botão de tema com efeito elástico ===== */
 .botaoTema button {
   display: grid;
@@ -195,8 +223,7 @@
   transform: scale(0.94);
 }
 
-
-.sugestoes-pesquisa {
+.sugestoes {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -242,53 +269,105 @@
 }
 
 .informacoes-cidade {
-    position: absolute;
-    top: 92px;
-    right: 32px;
-    width: min(360px, calc(100% - 64px));
+    position: fixed;
+    top: 90px;
+    right: 24px;
+    width: 300px;
+    max-width: calc(100% - 48px);
     padding: 20px;
+    margin-top: 25px;
+
+    background: var(--cor-vidro-forte);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
     border: 1px solid var(--cor-vidro-borda);
-    border-radius: 16px;
-    background: var(--cor-painel);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-    z-index: 5;
+    border-radius: 18px;
+    box-shadow: var(--sombra-painel);
+
+    color: var(--cor-texto);
+    z-index: 30;
 }
 
 .informacoes-cidade-cabecalho {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
-}
-
-.informacoes-cidade h2 {
-    margin: 4px 0 16px;
-    font-size: 1.35rem;
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .informacoes-cidade-pais {
+    display: block;
     font-size: 0.75rem;
-    opacity: 0.65;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+    margin-bottom: 2px;
 }
 
-.informacoes-cidade-cabecalho button {
-    border: 0;
-    background: transparent;
+.informacoes-cidade-cabecalho h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#fecharInformacoes {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+
+    background: var(--cor-vidro);
+    border: 1px solid var(--cor-vidro-borda);
+    border-radius: 50%;
     color: var(--cor-texto);
-    font-size: 1.5rem;
+    font-size: 1rem;
     line-height: 1;
     cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-.informacoes-cidade-dados p,
-.mensagem-cidade {
-    margin: 8px 0 0;
+#fecharInformacoes:hover {
+    background: var(--cor-vidro-hover);
+}
+
+.informacoes-cidade-dados {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.informacoes-cidade-dados p {
+    margin: 0;
+    padding: 10px 14px;
+
+    background: var(--cor-vidro);
+    border-radius: 10px;
     font-size: 0.9rem;
 }
 
+.informacoes-cidade-dados strong {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.55;
+    margin-bottom: 2px;
+    font-weight: 600;
+}
 
+.informacoes-cidade-dados span {
+    font-weight: 500;
+}
+
+.mensagem-cidade {
+    margin: 12px 0 0 0;
+    font-size: 0.85rem;
+    color: #ff8080;
+}
+
+.mensagem-cidade:empty {
+    display: none;
+}
 
 /* ===== 6. Responsivo e acessibilidade ===== */
 @media (max-width: 860px) {
@@ -309,7 +388,8 @@
   .Titulos .titulo {
     animation: none;
   }
-}   
+}
+
 /* ===== MODO DIA ===== */
 :root[data-theme="light"] {
   --atmo: #0284c7;
@@ -326,7 +406,7 @@
     0 4px 24px rgba(47, 82, 196, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
-posi
+
 :root[data-theme="light"] .barra::after {
   background: linear-gradient(90deg, #facc15, #fef08a, #facc15, #fef08a, #facc15);
   background-size: 200% 100%;
@@ -405,6 +485,7 @@ posi
   background: rgba(255, 255, 255, 0.25);
   box-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
 }
+
 #c {
   display: block;
   position: fixed;
@@ -425,7 +506,4 @@ body::-webkit-scrollbar {
 
 html, body {
   scrollbar-width: none;
-}
-.pesquisar {
-  position: relative;
 }

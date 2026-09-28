@@ -18,21 +18,18 @@ class CidadeService
     {
         error_log("🟣 CidadeService::buscarCidade({$nome})");
 
-        // 1. Tenta achar no banco primeiro
         $cidade = $this->cidadeRepository->buscarPorNome($nome);
 
         if ($cidade !== null) {
             return $cidade;
         }
 
-        // 2. Não achou no banco -> busca na API externa
         $dadosApi = $this->consultarApiExterna($nome);
 
         if ($dadosApi === null) {
             return null;
         }
 
-        // 3. Salva no banco e devolve o objeto já pronto
         return $this->cidadeRepository->salvar(
             $dadosApi['nome'],
             $dadosApi['pais'],
@@ -55,13 +52,14 @@ class CidadeService
                 'q' => $nome,
                 'format' => 'json',
                 'addressdetails' => 1,
-                'limit' => 5,
+                'limit' => 2,
                 'featuretype' => 'city',
             ]);
 
         $contexto = stream_context_create([
             'http' => [
                 'header' => "User-Agent: FeiraTecnicaApp/1.0\r\n",
+                'timeout' => 5,
             ],
         ]);
 
@@ -79,21 +77,21 @@ class CidadeService
         }
 
         return array_values(array_filter(array_map(
-            static function (array $resultado): ?array {
-                if (
-                    !isset($resultado['display_name'], $resultado['lat'], $resultado['lon'])
-                    || !isset($resultado['address']['country'])
-                ) {
+            static function ($resultado): ?array {
+                if (!is_array($resultado)) {
                     return null;
                 }
 
                 $nomeCidade = $resultado['address']['city']
                     ?? $resultado['address']['town']
                     ?? $resultado['address']['village']
-                    ?? $resultado['name']
                     ?? '';
 
                 if ($nomeCidade === '') {
+                    return null;
+                }
+
+                if (!isset($resultado['display_name'], $resultado['lat'], $resultado['lon'], $resultado['address']['country'])) {
                     return null;
                 }
 
@@ -123,6 +121,7 @@ class CidadeService
         $contexto = stream_context_create([
             'http' => [
                 'header' => "User-Agent: FeiraTecnicaApp/1.0\r\n",
+                'timeout' => 5,
             ],
         ]);
 

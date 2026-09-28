@@ -19,7 +19,7 @@ campoPesquisa.addEventListener('input', () => {
     }
 
     controladorSugestoes = new AbortController();
-    window.setTimeout(() => carregarSugestoes(termo, controladorSugestoes.signal), 250);
+    window.setTimeout(() => carregarSugestoes(termo, controladorSugestoes.signal), 600);
 });
 
 campoPesquisa.addEventListener('keydown', (evento) => {
@@ -75,7 +75,9 @@ function renderizarSugestoes() {
     listaSugestoes.hidden = sugestoesAtuais.length === 0;
 }
 
-async function carregarCidade(nome) {
+export async function carregarCidade(nome) {
+    console.log('carregarCidade foi chamada com:', nome);   
+    console.trace();
     limparSugestoes();
     campoPesquisa.disabled = true;
     mostrarMensagem('Consultando informações da cidade...');
@@ -126,7 +128,11 @@ function mostrarMensagem(mensagem) {
     document.getElementById('cidadePais').textContent = '';
     document.getElementById('cidadeCoordenadas').textContent = '--';
     document.getElementById('cidadeClima').textContent = '--';
+    document.getElementById('cidadeHabitantes').textContent = '--';
+    document.getElementById('cidadeHorario').textContent = '--';
+    document.getElementById('cidadeSensacao').textContent = '--';
     document.getElementById('mensagemCidade').textContent = mensagem;
+  
 }
 
 function limparSugestoes() {

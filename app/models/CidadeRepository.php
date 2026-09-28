@@ -64,4 +64,5 @@ class CidadeRepository
             $dados['criado_em']
         );
     }
+    
 }

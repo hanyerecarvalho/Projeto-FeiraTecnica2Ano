@@ -21,7 +21,7 @@
           <div class="pesquisar">
                 <span class="pesquisaIcone"></span>
                 <input id="inputPesquisa" type="text" placeholder="Pesquisar cidade..." autocomplete="off">
-                 <ul id="sugestoes" class="sugestoes" role="listbox"></ul>
+                 <ul id="sugestoesPesquisa" class="sugestoes" role="listbox" hidden></ul>
             </div>
 
             <div class="grupo-horarios">
@@ -54,6 +54,9 @@
             <div class="informacoes-cidade-dados">
                 <p><strong>Localização:</strong> <span id="cidadeCoordenadas"></span></p>
                 <p><strong>Clima:</strong> <span id="cidadeClima">Consultando...</span></p>
+                <p><strong>Habitantes:</strong> <span id="cidadeHabitantes">Consultando...</span></p>
+                <p><strong>Fuso Horário:</strong> <span id="cidadeHorario">Consultando...</span></p>
+                <p><strong>Sensação Térmica:</strong> <span id="cidadeSensacao">Consultando...</span></p>
             </div>
             <p id="mensagemCidade" class="mensagem-cidade"></p>
         </section>
@@ -63,7 +66,6 @@
     <script src="../js/tema.js"></script>
     <script type="module" src="../js/main.js"></script>
     <script type="module" src="../js/horarios.js"></script>
-    <script type="module" src="../js/ui.js"></script>
 
 </body>
 </html>
