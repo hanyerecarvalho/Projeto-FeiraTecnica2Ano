@@ -23,17 +23,26 @@ class ClimaRepository
         return $this->mapear($dados);
     }
 
-    public function salvar(int $cidadeId, float $temperatura, string $descricao, int $umidade): Clima
-    {
+    public function salvar(
+        int $cidadeId,
+        float $temperatura,
+        string $descricao,
+        int $umidade,
+        ?float $sensacaoTermica,
+        ?int $fusoHorario
+    ): Clima {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare(
-            "INSERT INTO climas (cidade_id, temperatura, descricao, umidade) VALUES (:cid, :temp, :desc, :umid)"
+            "INSERT INTO climas (cidade_id, temperatura, descricao, umidade, sensacao_termica, fuso_horario)
+             VALUES (:cid, :temp, :desc, :umid, :sens, :fuso)"
         );
         $stmt->execute([
             'cid' => $cidadeId,
             'temp' => $temperatura,
             'desc' => $descricao,
             'umid' => $umidade,
+            'sens' => $sensacaoTermica,
+            'fuso' => $fusoHorario,
         ]);
 
         $id = (int) $pdo->lastInsertId();
@@ -52,6 +61,8 @@ class ClimaRepository
             (float) $dados['temperatura'],
             $dados['descricao'],
             (int) $dados['umidade'],
+            $dados['sensacao_termica'] !== null ? (float) $dados['sensacao_termica'] : null,
+            $dados['fuso_horario'] !== null ? (int) $dados['fuso_horario'] : null,
             $dados['consultado_em']
         );
     }

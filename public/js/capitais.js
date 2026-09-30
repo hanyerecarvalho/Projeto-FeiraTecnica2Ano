@@ -4,6 +4,7 @@ export const capitais = [
         nome: "Brasília",
         pais: "Brasil",
         latitude: -15.7939,
+        habitantes: 50,
         longitude: -47.8828
     },
     {
@@ -39,7 +40,7 @@ export const capitais = [
 
     // América do Norte
     {
-        nome: "Washington, D.C.",
+        nome: "Washington",
         pais: "Estados Unidos",
         latitude: 38.9072,
         longitude: -77.0369

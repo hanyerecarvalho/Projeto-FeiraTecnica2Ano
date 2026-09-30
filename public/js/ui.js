@@ -1,3 +1,5 @@
+import { capitais } from './capitais.js';
+
 const campoPesquisa = document.getElementById('inputPesquisa');
 const listaSugestoes = document.getElementById('sugestoesPesquisa');
 const painelCidade = document.getElementById('informacoesCidade');
@@ -76,29 +78,43 @@ function renderizarSugestoes() {
 }
 
 export async function carregarCidade(nome) {
-    console.log('carregarCidade foi chamada com:', nome);   
-    console.trace();
     limparSugestoes();
     campoPesquisa.disabled = true;
     mostrarMensagem('Consultando informações da cidade...');
 
     try {
         const resposta = await fetch(`/api/cidade/${encodeURIComponent(nome)}`);
-        const cidade = await resposta.json();
+        const cidadeApi = await resposta.json();
+        console.log(cidadeApi);
 
         if (!resposta.ok) {
-            throw new Error(cidade.erro || 'Cidade não encontrada.');
+            throw new Error(cidadeApi.erro || 'Cidade não encontrada.');
         }
 
-        document.getElementById('cidadeNome').textContent = cidade.nome;
-        document.getElementById('cidadePais').textContent = cidade.pais;
+        // Se a cidade é uma das nossas capitais cadastradas localmente,
+        // usa a coordenada confiável do capitais.js.
+        // Caso contrário (cidade só existe via API), usa a coordenada da API.
+        const cidadeLocal = capitais.find(
+            c => c.nome.toLowerCase() === cidadeApi.nome.toLowerCase()
+        );
+
+        const latitude  = cidadeLocal?.latitude  ?? cidadeApi.latitude;
+        const longitude = cidadeLocal?.longitude ?? cidadeApi.longitude;
+
+        document.getElementById('cidadeNome').textContent = cidadeApi.nome;
+        document.getElementById('cidadePais').textContent = cidadeApi.pais;
         document.getElementById('cidadeCoordenadas').textContent =
-            `${cidade.latitude.toFixed(4)}, ${cidade.longitude.toFixed(4)}`;
+            `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
         document.getElementById('cidadeClima').textContent = 'Consultando...';
         painelCidade.hidden = false;
         document.getElementById('mensagemCidade').textContent = '';
+        document.getElementById('cidadeHabitantes').textContent =
+        document.getElementById('cidadeHabitantes').textContent =
+        cidadeApi.habitantes != null
+            ? cidadeApi.habitantes.toLocaleString('pt-BR')
+            : 'Não encontrado.';
 
-        await carregarClima(cidade.nome);
+        await carregarClima(cidadeApi.nome);
     } catch (erro) {
         mostrarMensagem(erro.message);
     } finally {
@@ -117,9 +133,25 @@ async function carregarClima(nomeCidade) {
 
         document.getElementById('cidadeClima').textContent =
             `${dados.clima.temperatura}°C, ${dados.clima.descricao}, umidade de ${dados.clima.umidade}%`;
+
+        document.getElementById('cidadeSensacao').textContent =
+            dados.clima.sensacaoTermica != null
+                ? `${dados.clima.sensacaoTermica}°C`
+                : '--';
+
+        document.getElementById('cidadeHorario').textContent =
+            dados.clima.fusoHorario != null
+                ? formatarFusoHorario(dados.clima.fusoHorario)
+                : '--';
     } catch (erro) {
         document.getElementById('cidadeClima').textContent = erro.message;
     }
+}
+
+function formatarFusoHorario(offsetSegundos) {
+    const horas = offsetSegundos / 3600;
+    const sinal = horas >= 0 ? '+' : '';
+    return `UTC${sinal}${horas}`;
 }
 
 function mostrarMensagem(mensagem) {

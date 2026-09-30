@@ -19,7 +19,7 @@ $cidadeRepository = new CidadeRepository();
 $climaRepository = new ClimaRepository();
 
 $cidadeService = new CidadeService($cidadeRepository);
-$climaService = new ClimaService($climaRepository, $_ENV['OPENWEATHER_KEY'] ?? '');
+$climaService = new ClimaService($climaRepository, $_ENV['OPENWEATHER_API_KEY'] ?? '');
 
 $cityController = new CityController($cidadeService);
 $climateController = new ClimateController($cidadeService, $climaService);

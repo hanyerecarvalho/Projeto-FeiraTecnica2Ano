@@ -13,6 +13,7 @@ class Cidade implements JsonSerializable
     private float $latitude;
     private float $longitude;
     private \DateTime $criadoEm;
+    private ?int $habitantes;
 
     public function __construct(
         int $idCidade,
@@ -20,6 +21,7 @@ class Cidade implements JsonSerializable
         string $pais,
         float $latitude,
         float $longitude,
+        ?int $habitantes,
         string $criadoEm
     ) {
         $this->setIdCidade($idCidade);
@@ -27,8 +29,9 @@ class Cidade implements JsonSerializable
         $this->setPais($pais);
         $this->setLatitude($latitude);
         $this->setLongitude($longitude);
+        $this->setHabitantes($habitantes);
         $this->setCriadoEm($criadoEm);
-    }
+}
 
     public function getIdCidade(): int
     {
@@ -123,6 +126,19 @@ class Cidade implements JsonSerializable
     {
         $this->criadoEm = new \DateTime($value);
     }
+    public function getHabitantes(): ?int
+    {
+        return $this->habitantes;
+    }
+
+    public function setHabitantes(?int $value): void
+    {
+        if ($value !== null && $value < 0) {
+            throw new InvalidArgumentException("habitantes não pode ser negativo.");
+        }
+
+        $this->habitantes = $value;
+    }
 
     public function jsonSerialize(): array
     {
@@ -133,6 +149,7 @@ class Cidade implements JsonSerializable
             'latitude' => $this->getLatitude(),
             'longitude' => $this->getLongitude(),
             'criadoEm' => $this->getCriadoEm()->format('Y-m-d H:i:s'),
+            'habitantes' => $this->getHabitantes()
         ];
     }
 }

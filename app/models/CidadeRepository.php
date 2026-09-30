@@ -35,17 +35,29 @@ class CidadeRepository
         return $this->mapear($dados);
     }
 
-    public function salvar(string $nome, string $pais, float $latitude, float $longitude): Cidade
+    public function salvar(
+        string $nome,
+        string $pais,
+        float $latitude,
+        float $longitude,
+        ?int $habitantes
+    ): Cidade
     {
         $pdo = Database::getConnection();
+
         $stmt = $pdo->prepare(
-            "INSERT INTO cidades (nome, pais, latitude, longitude) VALUES (:nome, :pais, :lat, :lon)"
+            "INSERT INTO cidades
+            (nome, pais, latitude, longitude, habitantes)
+            VALUES
+            (:nome, :pais, :lat, :lon, :habitantes)"
         );
+
         $stmt->execute([
             'nome' => $nome,
             'pais' => $pais,
             'lat' => $latitude,
             'lon' => $longitude,
+            'habitantes' => $habitantes,
         ]);
 
         $id = (int) $pdo->lastInsertId();
@@ -61,6 +73,7 @@ class CidadeRepository
             $dados['pais'],
             (float) $dados['latitude'],
             (float) $dados['longitude'],
+            isset($dados['habitantes']) ? (int) $dados['habitantes'] : null,
             $dados['criado_em']
         );
     }

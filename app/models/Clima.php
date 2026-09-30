@@ -12,6 +12,8 @@ class Clima implements JsonSerializable
     private float $temperatura;
     private string $descricao;
     private int $umidade;
+    private ?float $sensacaoTermica;
+    private ?int $fusoHorario;
     private \DateTime $consultadoEm;
 
     public function __construct(
@@ -20,6 +22,8 @@ class Clima implements JsonSerializable
         float $temperatura,
         string $descricao,
         int $umidade,
+        ?float $sensacaoTermica,
+        ?int $fusoHorario,
         string $consultadoEm
     ) {
         $this->setIdClima($idClima);
@@ -27,6 +31,8 @@ class Clima implements JsonSerializable
         $this->setTemperatura($temperatura);
         $this->setDescricao($descricao);
         $this->setUmidade($umidade);
+        $this->setSensacaoTermica($sensacaoTermica);
+        $this->setFusoHorario($fusoHorario);
         $this->setConsultadoEm($consultadoEm);
     }
 
@@ -106,6 +112,34 @@ class Clima implements JsonSerializable
         $this->umidade = $value;
     }
 
+    public function getSensacaoTermica(): ?float
+    {
+        return $this->sensacaoTermica;
+    }
+
+    public function setSensacaoTermica(?float $value): void
+    {
+        if ($value !== null && ($value < -100 || $value > 60)) {
+            throw new InvalidArgumentException("sensacaoTermica fora de uma faixa realista (-100 a 60).");
+        }
+
+        $this->sensacaoTermica = $value;
+    }
+
+    public function getFusoHorario(): ?int
+    {
+        return $this->fusoHorario;
+    }
+
+    public function setFusoHorario(?int $value): void
+    {
+        if ($value !== null && ($value < -43200 || $value > 50400)) {
+            throw new InvalidArgumentException("fusoHorario fora da faixa válida de offset em segundos.");
+        }
+
+        $this->fusoHorario = $value;
+    }
+
     public function getConsultadoEm(): \DateTime
     {
         return $this->consultadoEm;
@@ -124,6 +158,8 @@ class Clima implements JsonSerializable
             'temperatura' => $this->getTemperatura(),
             'descricao' => $this->getDescricao(),
             'umidade' => $this->getUmidade(),
+            'sensacaoTermica' => $this->getSensacaoTermica(),
+            'fusoHorario' => $this->getFusoHorario(),
             'consultadoEm' => $this->getConsultadoEm()->format('Y-m-d H:i:s'),
         ];
     }

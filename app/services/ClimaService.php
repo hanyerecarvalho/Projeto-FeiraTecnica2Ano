@@ -44,7 +44,9 @@ class ClimaService
             $cidade->getIdCidade(),
             $dadosApi['temperatura'],
             $dadosApi['descricao'],
-            $dadosApi['umidade']
+            $dadosApi['umidade'],
+            $dadosApi['sensacaoTermica'],
+            $dadosApi['fusoHorario']
         );
     }
 
@@ -66,7 +68,7 @@ class ClimaService
                 'appid' => $this->apiKey,
                 'units' => 'metric',
                 'lang' => 'pt_br',
-            ]);
+                ]);
 
         $resposta = @file_get_contents($url);
 
@@ -85,6 +87,8 @@ class ClimaService
             'temperatura' => (float) $dados['main']['temp'],
             'descricao' => $dados['weather'][0]['description'],
             'umidade' => (int) $dados['main']['humidity'],
+            'sensacaoTermica' => isset($dados['main']['feels_like']) ? (float) $dados['main']['feels_like'] : null,
+            'fusoHorario' => isset($dados['timezone']) ? (int) $dados['timezone'] : null,
         ];
     }
 }

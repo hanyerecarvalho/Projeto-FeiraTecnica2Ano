@@ -34,7 +34,8 @@ class CidadeService
             $dadosApi['nome'],
             $dadosApi['pais'],
             $dadosApi['latitude'],
-            $dadosApi['longitude']
+            $dadosApi['longitude'],
+            $dadosApi['habitantes']
         );
     }
 
@@ -52,6 +53,7 @@ class CidadeService
                 'q' => $nome,
                 'format' => 'json',
                 'addressdetails' => 1,
+                'extratags' => 1,
                 'limit' => 2,
                 'featuretype' => 'city',
             ]);
@@ -97,10 +99,12 @@ class CidadeService
 
                 return [
                     'nome' => $nomeCidade,
-                    'pais' => $resultado['address']['country'],
+                    'pais' => $resultado['address']['country'] ?? '',
                     'latitude' => (float) $resultado['lat'],
                     'longitude' => (float) $resultado['lon'],
-                    'descricao' => $resultado['display_name'],
+                    'habitantes' => isset($resultado['extratags']['population'])
+                        ? (int) $resultado['extratags']['population']
+                        : null,
                 ];
             },
             $dados
@@ -114,6 +118,7 @@ class CidadeService
             . http_build_query([
                 'q' => $nome,
                 'format' => 'json',
+                'extratags' => 1,
                 'addressdetails' => 1,
                 'limit' => 1,
             ]);
@@ -145,6 +150,9 @@ class CidadeService
             'pais' => $resultado['address']['country'] ?? '',
             'latitude' => (float) $resultado['lat'],
             'longitude' => (float) $resultado['lon'],
+            'habitantes' => isset($resultado['extratags']['population'])
+                ? (int) $resultado['extratags']['population']
+                : null,
         ];
     }
 }
