@@ -207,6 +207,12 @@ export const capitais = [
         latitude: 31.6295,
         longitude: -7.9811
     },
+    {
+        nome: "Santos",
+        pais: "Brasil",
+        latitude: -23.9608,
+        longitude: -46.3336
+    },
 
     // Oceania
     {
