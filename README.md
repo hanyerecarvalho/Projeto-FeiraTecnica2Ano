@@ -1,4 +1,5 @@
 # 🌎 Projeto Feira Técnica — Exploração do Planeta Terra
+# 🌎 Planetary View 3D
 
 Aplicação web interativa desenvolvida para a Feira Técnica do curso Técnico em Informática, com o objetivo de apresentar informações sobre o planeta Terra de forma visual, moderna e interativa.
 
